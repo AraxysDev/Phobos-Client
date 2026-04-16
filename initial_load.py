@@ -1,5 +1,9 @@
 import arcade
 import os
+import json
+import threading
+import requests
+from app_page import AppPage
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
@@ -27,9 +31,11 @@ class initial_load(arcade.View):
         self.SCREEN_H = screen_h
 
         # "Setup" variables
+        self.downloaded_data_queue = None
+        self.progress = None
+        self.app_list = None
         self.logo = None
-
-        self.setup()
+        self.json_fetch_thread = None
 
     def on_show_view(self):
         self.setup()
@@ -53,6 +59,27 @@ class initial_load(arcade.View):
 
         self.is_dragging = False
 
+        # Load app list
+        with open(load('client_apps.json'), 'r') as f:
+            self.app_list = json.load(f)
+
+        self.progress = 0
+        self.downloaded_data_queue = []
+
+        self.json_fetch_thread = threading.Thread(target=self.fetch_all_json, daemon=True)
+        self.json_fetch_thread.start()
+
+    def fetch_all_json(self):
+        for app_url in self.app_list:
+            try:
+                response = requests.get(app_url)
+                response.raise_for_status()
+                data = response.json()
+
+                self.downloaded_data_queue.append((app_url, data))
+            except Exception as e:
+                print(f"Failed fetching {app_url}: {e}")
+
     def on_draw(self):
         self.window.clear()
 
@@ -68,7 +95,15 @@ class initial_load(arcade.View):
                     font_name='CNRGNNormal').draw()
 
     def on_update(self, delta_time):
-        pass
+        if self.downloaded_data_queue:
+            # Create object
+            app_url, data = self.downloaded_data_queue.pop(0)
+            app_name = data.get("name")
+
+            self.window.views[app_name] = AppPage(app_url)
+
+            # Update progress
+            self.progress = (len(self.window.views) - 1) / len(self.app_list)
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if buttons & arcade.MOUSE_BUTTON_LEFT:

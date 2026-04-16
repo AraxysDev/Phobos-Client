@@ -1,5 +1,5 @@
 # Import libraries
-import arcade
+import arcade, time
 
 # Import custom modules
 from initial_load import initial_load
@@ -11,10 +11,10 @@ if __name__ == '__main__':
     win = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, style='borderless')
 
     # Load views
-    initial_load_view = initial_load(SCREEN_W, SCREEN_H)
+    win.views = {'initial_load': initial_load(SCREEN_W, SCREEN_H)}
 
-    # Set the initial view to the loading screen
-    win.show_view(initial_load_view)
-    
+    # Show initial screen
+    win.show_view(win.views['initial_load'])
+
     # Run arcade
     arcade.run()
