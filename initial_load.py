@@ -31,6 +31,8 @@ class initial_load(arcade.View):
         self.SCREEN_H = screen_h
 
         # "Setup" variables
+        self.app_names = None
+        self.switched = None
         self.downloaded_data_queue = None
         self.progress = None
         self.app_list = None
@@ -64,7 +66,9 @@ class initial_load(arcade.View):
             self.app_list = json.load(f)
 
         self.progress = 0
+        self.switched = False
         self.downloaded_data_queue = []
+        self.app_names = []
 
         self.json_fetch_thread = threading.Thread(target=self.fetch_all_json, daemon=True)
         self.json_fetch_thread.start()
@@ -101,11 +105,16 @@ class initial_load(arcade.View):
             # Create object
             app_url, data = self.downloaded_data_queue.pop(0)
             app_name = data.get("name")
+            self.app_names.append(app_name)
 
-            self.window.views[app_name] = AppPage(app_url)
+            self.window.views[app_name] = AppPage(app_url, data, self.SCREEN_W, self.SCREEN_H)
 
             # Update progress
             self.progress = (len(self.window.views) - 1) / len(self.app_list)
+
+        if self.progress >= 1 and not self.switched:
+            self.switched = True
+            self.window.show_view(self.window.views[self.app_names[0]])
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if buttons & arcade.MOUSE_BUTTON_LEFT:

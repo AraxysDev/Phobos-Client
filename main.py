@@ -1,5 +1,5 @@
 # Import libraries
-import arcade, time
+import arcade
 
 # Import custom modules
 from initial_load import initial_load
