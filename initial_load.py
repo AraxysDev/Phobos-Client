@@ -94,6 +94,8 @@ class initial_load(arcade.View):
                     bold=True,
                     font_name='CNRGNNormal').draw()
 
+        arcade.draw_lrbt_rectangle_filled(0, self.window.width * self.progress, 0, 10, arcade.color.WHEAT)
+
     def on_update(self, delta_time):
         if self.downloaded_data_queue:
             # Create object
