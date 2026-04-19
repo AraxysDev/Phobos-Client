@@ -2,7 +2,7 @@
 import arcade
 
 # Import custom modules
-from initial_load import initial_load
+from client_pages.initial_load import initial_load
 
 if __name__ == '__main__':
     # Setup window
@@ -11,7 +11,7 @@ if __name__ == '__main__':
     win = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, style='borderless')
 
     # Load views
-    win.views = {'initial_load': initial_load(SCREEN_W, SCREEN_H)}
+    win.views = {'initial_load': initial_load(SCREEN_W, SCREEN_H), 'connection_error': }
 
     # Show initial screen
     win.show_view(win.views['initial_load'])

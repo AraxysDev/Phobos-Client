@@ -18,7 +18,7 @@ def calculate_easing(t):
 
 
 # Load fonts
-arcade.load_font(load('client_assets/fonts/CNRGNNormal.otf'))
+arcade.load_font(load('../client_assets/fonts/CNRGNNormal.otf'))
 
 
 class initial_load(arcade.View):
@@ -55,14 +55,14 @@ class initial_load(arcade.View):
                                  self.SCREEN_H * 4 // 10 - self.window.height // 2)
 
         # Setup logo
-        self.logo = arcade.Sprite(load('client_assets/logos/logo.png'))
+        self.logo = arcade.Sprite(load('../client_assets/logos/logo.png'))
         self.logo.scale = 0.6
         self.logo.position = self.window.width // 2, self.window.height * 2 // 3 - 20
 
         self.is_dragging = False
 
         # Load app list
-        with open(load('client_apps.json'), 'r') as f:
+        with open(load('../client_apps.json'), 'r') as f:
             self.app_list = json.load(f)
 
         self.progress = 0

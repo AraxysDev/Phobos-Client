@@ -1,6 +1,5 @@
 import arcade
 import os
-import json
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
@@ -49,7 +48,7 @@ class AppPage(arcade.View):
                                  self.SCREEN_H * 4 // 10 - self.window.height // 2)
 
         # Setup logo
-        self.logo = arcade.Sprite(load('client_assets/logos/logo.png'))
+        self.logo = arcade.Sprite(load('../client_assets/logos/logo.png'))
         self.logo.scale = 0.2
         self.logo.position = 40, self.window.height - 60
 
