@@ -8,9 +8,8 @@ linebreak_bold = '==============================================================
 
 
 def log(message, error=False):
-    global path, file, linebreak
-
     validate()
+
     # Calculate local time
     t = time.localtime()
     hours = t.tm_hour
@@ -27,8 +26,6 @@ def log(message, error=False):
 
 
 def client_opened():
-    global linebreak_bold
-
     # Calculate local time
     t = time.localtime()
     hours = t.tm_hour
@@ -44,8 +41,6 @@ def client_opened():
 
 
 def page_opened(page):
-    global linebreak_bold
-
     # Calculate local time
     t = time.localtime()
     hours = t.tm_hour
@@ -67,8 +62,6 @@ def clear_logs():
 
 
 def validate():
-    global path, file
-
     # Ensure folder exists
     if not os.path.exists(path):
         os.makedirs(path)
