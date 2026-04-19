@@ -3,7 +3,7 @@ import os
 import json
 import threading
 import requests
-from app_page import AppPage
+from client_pages.app_page import AppPage
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
@@ -38,6 +38,7 @@ class initial_load(arcade.View):
         self.app_list = None
         self.logo = None
         self.json_fetch_thread = None
+        self.network_error = None
 
     def on_show_view(self):
         self.setup()
@@ -51,6 +52,7 @@ class initial_load(arcade.View):
 
         # Setup window
         self.window.activate()
+        self.window.set_size(550, 280)
         self.window.set_location(self.SCREEN_W // 2 - self.window.width // 2,
                                  self.SCREEN_H * 4 // 10 - self.window.height // 2)
 
@@ -60,6 +62,7 @@ class initial_load(arcade.View):
         self.logo.position = self.window.width // 2, self.window.height * 2 // 3 - 20
 
         self.is_dragging = False
+        self.network_error = False
 
         # Load app list
         with open(load('../client_apps.json'), 'r') as f:
@@ -83,6 +86,7 @@ class initial_load(arcade.View):
                 self.downloaded_data_queue.append((app_url, data))
             except Exception as e:
                 print(f"Failed fetching {app_url}: {e}")
+                self.network_error = True
 
     def on_draw(self):
         self.window.clear()
@@ -97,6 +101,8 @@ class initial_load(arcade.View):
                     anchor_x='center',
                     bold=True,
                     font_name='CNRGNNormal').draw()
+
+        arcade.draw_lrbt_rectangle_filled(0, self.window.width, 0, 10, (235, 233, 212))
 
         arcade.draw_lrbt_rectangle_filled(0, self.window.width * self.progress, 0, 10, arcade.color.WHEAT)
 
@@ -115,6 +121,9 @@ class initial_load(arcade.View):
         if self.progress >= 1 and not self.switched:
             self.switched = True
             self.window.show_view(self.window.views[self.app_names[0]])
+
+        if self.network_error:
+            self.window.show_view(self.window.views['connection_error'])
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if buttons & arcade.MOUSE_BUTTON_LEFT:

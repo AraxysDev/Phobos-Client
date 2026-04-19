@@ -1,8 +1,9 @@
 # Import libraries
 import arcade
 
-# Import custom modules
+# Import pages
 from client_pages.initial_load import initial_load
+from client_pages.connection_page import connection_error
 
 if __name__ == '__main__':
     # Setup window
@@ -11,7 +12,8 @@ if __name__ == '__main__':
     win = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, style='borderless')
 
     # Load views
-    win.views = {'initial_load': initial_load(SCREEN_W, SCREEN_H), 'connection_error': }
+    win.views = {'initial_load': initial_load(SCREEN_W, SCREEN_H), 'connection_error': connection_error(SCREEN_W, SCREEN_H)}
+    win.cache = {'connection_page_pos': (SCREEN_W // 2 - 550 / 2, SCREEN_H * 4 // 10 - 280 / 2)}
 
     # Show initial screen
     win.show_view(win.views['initial_load'])
