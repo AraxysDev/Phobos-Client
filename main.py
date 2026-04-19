@@ -5,11 +5,15 @@ import arcade
 from client_pages.initial_load import initial_load
 from client_pages.connection_page import connection_error
 
+# Import logs
+from client_logs.main_logs import client_opened
+
 if __name__ == '__main__':
     # Setup window
     WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE = 550, 280, 'Phobos Client'
     SCREEN_W, SCREEN_H = arcade.get_display_size()
     win = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, style='borderless')
+    client_opened()
 
     # Load views
     win.views = {'initial_load': initial_load(SCREEN_W, SCREEN_H), 'connection_error': connection_error(SCREEN_W, SCREEN_H)}

@@ -1,9 +1,15 @@
+# Import libraries
 import arcade
 import os
 import json
 import threading
 import requests
+
+# Import Pages
 from client_pages.app_page import AppPage
+
+# Import logs
+from client_logs.main_logs import page_opened, log
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
@@ -41,6 +47,7 @@ class initial_load(arcade.View):
         self.network_error = None
 
     def on_show_view(self):
+        page_opened('Initial Load')
         self.setup()
 
     def setup(self):
@@ -68,6 +75,8 @@ class initial_load(arcade.View):
         with open(load('../client_apps.json'), 'r') as f:
             self.app_list = json.load(f)
 
+        log(f'Found app list: {self.app_list}')
+
         self.progress = 0
         self.switched = False
         self.downloaded_data_queue = []
@@ -75,6 +84,7 @@ class initial_load(arcade.View):
 
         self.json_fetch_thread = threading.Thread(target=self.fetch_all_json, daemon=True)
         self.json_fetch_thread.start()
+        log(f'Started fetch_all_json thread: {self.json_fetch_thread}')
 
     def fetch_all_json(self):
         for app_url in self.app_list:
@@ -85,7 +95,7 @@ class initial_load(arcade.View):
 
                 self.downloaded_data_queue.append((app_url, data))
             except Exception as e:
-                print(f"Failed fetching {app_url}: {e}")
+                log(f"Failed fetching {app_url}: {e}", error=True)
                 self.network_error = True
 
     def on_draw(self):
@@ -120,9 +130,11 @@ class initial_load(arcade.View):
 
         if self.progress >= 1 and not self.switched:
             self.switched = True
+            log(f'Loading pages complete: {self.window.views}')
             self.window.show_view(self.window.views[self.app_names[0]])
 
         if self.network_error:
+            log(f'Switching to connection error page.')
             self.window.show_view(self.window.views['connection_error'])
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):

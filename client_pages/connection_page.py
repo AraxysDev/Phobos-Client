@@ -1,5 +1,9 @@
+# Import libraries
 import arcade
 import os
+
+# Import logs
+from client_logs.main_logs import page_opened, log
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
@@ -30,6 +34,7 @@ class connection_error(arcade.View):
         self.button_x = None
 
     def on_show_view(self):
+        page_opened('Connection Error')
         self.setup()
 
     def setup(self):
@@ -96,6 +101,7 @@ class connection_error(arcade.View):
     def on_mouse_press(self, x, y, button, modifiers):
         # Check if button is clicked
         if self.button_x - self.button_width // 2 < x < self.button_x + self.button_width // 2 and self.button_y - self.button_height // 2 < y < self.button_y + self.button_height // 2:
+            log('Retry button pressed, switching to initial_load page.')
             self.window.show_view(self.window.views['initial_load'])
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
