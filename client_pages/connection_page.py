@@ -85,12 +85,16 @@ class connection_error(arcade.View):
                     font_name='CNRGNNormal').draw()
 
         # Render button
-        arcade.draw_lrbt_rectangle_outline(self.button_x - self.button_width // 2, self.button_x + self.button_width // 2, self.button_y - self.button_height // 2, self.button_y + self.button_height // 2, color=arcade.color.GREEN, border_width=2)
+        arcade.draw_lrbt_rectangle_outline(self.button_x - self.button_width // 2,
+                                           self.button_x + self.button_width // 2,
+                                           self.button_y - self.button_height // 2,
+                                           self.button_y + self.button_height // 2,
+                                           color=arcade.color.BLACK, border_width=2)
         arcade.Text(
             'Retry',
             self.button_x - 2,
             self.button_y - 9,
-            arcade.color.GREEN,
+            arcade.color.BLACK,
             18,
             anchor_x='center',
             font_name='CNRGNNormal').draw()
