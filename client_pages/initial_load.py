@@ -120,7 +120,7 @@ class initial_load(arcade.View):
         if self.downloaded_data_queue:
             # Create object
             app_url, data = self.downloaded_data_queue.pop(0)
-            app_name = data.get("name")
+            app_name = data.get('name')
             self.app_names.append(app_name)
 
             self.window.views[app_name] = AppPage(app_url, data, self.SCREEN_W, self.SCREEN_H)

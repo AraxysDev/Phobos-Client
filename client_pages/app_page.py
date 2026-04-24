@@ -13,12 +13,34 @@ def calculate_easing(t):
     return t * t * (3 - 2 * t)
 
 
+def in_region(x, y, l, r, b, t):
+    return (l <= x <= r) and (b <= y <= t)
+
+
+# Load fonts
+arcade.load_font(load('../client_assets/fonts/CNRGNNormal.otf'))
+
+
 class AppPage(arcade.View):
     def __init__(self, app_url, app_data, screen_w, screen_h):
         super().__init__()
         # Constants
         self.sidebar_animation_duration = 0.5
         self.sidebar_animation_threshold = 20
+        self.tabs_y = 500
+        self.tabs_w = 100
+        self.tabs_h = 50
+        self.sidebar_width = 80
+        self.tabs_center = self.sidebar_width + (self.window.width - self.sidebar_width) // 2
+        self.tab = 0
+        self.tabs = ['APP', 'Patch Notes']
+        self.tab_coords = []
+
+        for idx, tab in enumerate(self.tabs):
+            self.tab_coords.append([self.tabs_center - int(len(self.tabs) / 2 * self.tabs_w) + idx * self.tabs_w,
+                                    self.tabs_center - int(len(self.tabs) / 2 * self.tabs_w) + (idx + 1) * self.tabs_w,
+                                    self.tabs_y - self.tabs_h // 2,
+                                    self.tabs_y + self.tabs_h // 2])
 
         # Function variables
         self.is_dragging = False
@@ -29,7 +51,6 @@ class AppPage(arcade.View):
         self.logo = None
         self.duration = None
         self.is_hovering_sidebar = None
-        self.sidebar_width = None
 
     def on_show_view(self):
         self.setup()
@@ -55,14 +76,45 @@ class AppPage(arcade.View):
         # Setup sidebar animation
         self.is_hovering_sidebar = False
         self.duration = 0
-        self.sidebar_width = 80
 
         self.is_dragging = False
+        self.tab = 0
 
     def on_draw(self):
         self.window.clear()
+
+        # Draw sidebar
         arcade.draw_lrbt_rectangle_filled(0, self.sidebar_width, 0, self.window.height, arcade.color.WHEAT)
         arcade.draw_sprite(self.logo)
+
+        # Draw tabs
+        arcade.draw_lrbt_rectangle_filled(self.tabs_center - int(len(self.tabs) / 2 * self.tabs_w),
+                                          self.tabs_center + int(len(self.tabs) / 2 * self.tabs_w),
+                                          self.tabs_y - self.tabs_h // 2,
+                                          self.tabs_y + self.tabs_h // 2,
+                                          (235, 233, 212))
+
+        for idx, tab in enumerate(self.tabs):
+            if self.current_tab() == tab:
+                arcade.draw_lrbt_rectangle_filled(self.tab_coords[self.tab][0],
+                                                  self.tab_coords[self.tab][1],
+                                                  self.tab_coords[self.tab][2],
+                                                  self.tab_coords[self.tab][3],
+                                                  arcade.color.WHEAT)
+            arcade.Text(tab,
+                        self.tabs_center - int(len(self.tabs) / 2 * self.tabs_w) + int((idx + 0.5) * self.tabs_w),
+                        self.tabs_y - 6,
+                        arcade.color.BLACK,
+                        12,
+                        anchor_x='center',
+                        bold=(self.current_tab() == tab),
+                        font_name='CNRGNNormal').draw()
+
+        # Draw elements within tabs
+        if self.current_tab() == self.tabs[1]:
+            pass
+        elif self.current_tab() == self.tabs[2]:
+            pass
 
     def on_update(self, delta_time):
         # Sidebar animation
@@ -71,8 +123,21 @@ class AppPage(arcade.View):
         else:
             self.duration = max(0, self.duration - delta_time)
 
-        extend_amount = calculate_easing(self.duration / self.sidebar_animation_duration) * self.sidebar_animation_threshold
+        extend_amount = calculate_easing(
+            self.duration / self.sidebar_animation_duration) * self.sidebar_animation_threshold
         self.sidebar_width = 80 + extend_amount
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        # Check for tab press
+        for idx, tab in enumerate(self.tabs):
+            res = in_region(x,
+                            y,
+                            self.tab_coords[idx][0],
+                            self.tab_coords[idx][1],
+                            self.tab_coords[idx][2],
+                            self.tab_coords[idx][3])
+            if res and self.current_tab() != tab:
+                self.tab = idx
 
     def on_mouse_motion(self, x, y, dx, dy):
         # Detect if hovering sidebar
@@ -105,3 +170,6 @@ class AppPage(arcade.View):
 
             except Exception:
                 pass
+
+    def current_tab(self):
+        return self.tabs[self.tab]
