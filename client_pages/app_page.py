@@ -143,7 +143,7 @@ class AppPage(arcade.View):
 
     def on_mouse_motion(self, x, y, dx, dy):
         # Detect if hovering sidebar
-        if x <= 80:
+        if 0 <= x <= self.sidebar_width:
             self.is_hovering_sidebar = True
         else:
             self.is_hovering_sidebar = False
