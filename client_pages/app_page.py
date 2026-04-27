@@ -28,10 +28,10 @@ class AppPage(arcade.View):
         self.WINDOW_WIDTH, self.WINDOW_HEIGHT = 1200, 700
         self.sidebar_animation_duration = 0.5
         self.sidebar_animation_threshold = 20
-        self.drag_bar_height = 20
+        self.drag_bar_height = 30
         self.tabs_w = 130
         self.tabs_h = 30
-        self.tabs_y = self.WINDOW_HEIGHT - self.drag_bar_height - self.tabs_h // 2 - 10
+        self.tabs_y = self.WINDOW_HEIGHT - self.drag_bar_height - self.tabs_h // 2
         self.sidebar_width = 80
         self.tabs_center = self.sidebar_width + (self.WINDOW_WIDTH - self.sidebar_width) // 2
         self.tab = 0
