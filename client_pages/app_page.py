@@ -25,13 +25,15 @@ class AppPage(arcade.View):
     def __init__(self, app_url, app_data, screen_w, screen_h):
         super().__init__()
         # Constants
+        self.WINDOW_WIDTH, self.WINDOW_HEIGHT = 1200, 700
         self.sidebar_animation_duration = 0.5
         self.sidebar_animation_threshold = 20
-        self.tabs_y = 500
-        self.tabs_w = 100
-        self.tabs_h = 50
+        self.drag_bar_height = 20
+        self.tabs_w = 130
+        self.tabs_h = 30
+        self.tabs_y = self.WINDOW_HEIGHT - self.drag_bar_height - self.tabs_h // 2 - 10
         self.sidebar_width = 80
-        self.tabs_center = self.sidebar_width + (self.window.width - self.sidebar_width) // 2
+        self.tabs_center = self.sidebar_width + (self.WINDOW_WIDTH - self.sidebar_width) // 2
         self.tab = 0
         self.tabs = ['APP', 'Patch Notes']
         self.tab_coords = []
@@ -64,7 +66,7 @@ class AppPage(arcade.View):
 
         # Setup window
         self.window.activate()
-        self.window.set_size(1200, 700)
+        self.window.set_size(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
         self.window.set_location(self.SCREEN_W // 2 - self.window.width // 2,
                                  self.SCREEN_H * 4 // 10 - self.window.height // 2)
 
@@ -111,9 +113,9 @@ class AppPage(arcade.View):
                         font_name='CNRGNNormal').draw()
 
         # Draw elements within tabs
-        if self.current_tab() == self.tabs[1]:
+        if self.current_tab() == self.tabs[0]:
             pass
-        elif self.current_tab() == self.tabs[2]:
+        elif self.current_tab() == self.tabs[1]:
             pass
 
     def on_update(self, delta_time):
@@ -147,7 +149,7 @@ class AppPage(arcade.View):
             self.is_hovering_sidebar = False
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-        if buttons & arcade.MOUSE_BUTTON_LEFT and y > (self.window.height - 20):
+        if buttons & arcade.MOUSE_BUTTON_LEFT and y > (self.window.height - self.drag_bar_height):
             try:
                 # New position
                 curr_x, curr_y = self.window.get_location()
